@@ -4,10 +4,16 @@ import eci.dosw.alpha.BienestarService.dto.EventDTO;
 import eci.dosw.alpha.BienestarService.model.EmergencyContact;
 import eci.dosw.alpha.BienestarService.model.Resource;
 import eci.dosw.alpha.BienestarService.service.BienestarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Bienestar", description = "Centro de Bienestar Universitario: recursos, eventos y contactos de emergencia")
 @RestController
 @RequestMapping("/bienestar")
 public class BienestarController {
@@ -18,31 +24,45 @@ public class BienestarController {
         this.bienestarService = bienestarService;
     }
 
-    // 1. Obtener recursos de bienestar
+    @Operation(summary = "Listar recursos de bienestar",
+               description = "Devuelve recursos disponibles. E1: si no hay recursos → lista vacía (no es error).")
+    @ApiResponse(responseCode = "200", description = "Lista de recursos (puede ser vacía)")
     @GetMapping("/resources")
-    public List<Resource> getResources(@RequestParam(required = false) String category) {
+    public List<Resource> getResources(
+            @Parameter(description = "Filtrar por categoría (ej. PSICOLOGÍA, NUTRICIÓN)")
+            @RequestParam(required = false) String category) {
         return bienestarService.getResources(category);
     }
 
-    // 2. Obtener eventos de bienestar (desde events-service)
+    @Operation(summary = "Obtener eventos de bienestar",
+               description = "Consulta eventos con categoría BIENESTAR desde EventService. E2: si EventService no está disponible → lista vacía.")
+    @ApiResponse(responseCode = "200", description = "Lista de eventos de bienestar (puede ser vacía si EventService no responde)")
     @GetMapping("/events")
     public List<EventDTO> getEvents() {
         return bienestarService.getWellbeingEvents();
     }
 
-    // 3. Obtener contacto principal de emergencia
+    @Operation(summary = "Obtener contacto de emergencia principal",
+               description = "Retorna el primer contacto de emergencia configurado.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Contacto de emergencia encontrado"),
+        @ApiResponse(responseCode = "500", description = "No hay contacto de emergencia configurado")
+    })
     @GetMapping("/contact")
     public EmergencyContact getContact() {
         return bienestarService.getEmergencyContact();
     }
 
-    // 4. Crear contacto de emergencia
+    @Operation(summary = "Crear contacto de emergencia",
+               description = "Registra un nuevo contacto de emergencia en la base de datos.")
+    @ApiResponse(responseCode = "200", description = "Contacto creado")
     @PostMapping("/contact")
     public EmergencyContact createContact(@RequestBody EmergencyContact contact) {
         return bienestarService.createEmergencyContact(contact);
     }
 
-    // 5.) Listar todos los contactos
+    @Operation(summary = "Listar todos los contactos de emergencia")
+    @ApiResponse(responseCode = "200", description = "Lista de contactos de emergencia")
     @GetMapping("/contacts")
     public List<EmergencyContact> getAllContacts() {
         return bienestarService.getAllEmergencyContacts();
