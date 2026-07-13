@@ -1,5 +1,6 @@
 package eci.dosw.alpha.BienestarService.service;
 
+import eci.dosw.alpha.BienestarService.dto.EmergencyContactDTO;
 import eci.dosw.alpha.BienestarService.dto.EventDTO;
 import eci.dosw.alpha.BienestarService.model.EmergencyContact;
 import eci.dosw.alpha.BienestarService.model.Resource;
@@ -62,8 +63,12 @@ public class BienestarService {
                 .orElseThrow(() -> new RuntimeException("No hay contacto de emergencia configurado"));
     }
 
-    public EmergencyContact createEmergencyContact(EmergencyContact contact) {
-        return emergencyContactRepository.save(contact);
+    public EmergencyContact createEmergencyContact(EmergencyContactDTO contact) {
+        EmergencyContact entity = new EmergencyContact();
+        entity.setName(contact.getName());
+        entity.setPhone(contact.getPhone());
+        entity.setEmail(contact.getEmail());
+        return emergencyContactRepository.save(entity);
     }
 
     public List<EmergencyContact> getAllEmergencyContacts() {

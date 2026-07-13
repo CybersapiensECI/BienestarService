@@ -1,5 +1,6 @@
 package eci.dosw.alpha.BienestarService.controller;
 
+import eci.dosw.alpha.BienestarService.dto.EmergencyContactDTO;
 import eci.dosw.alpha.BienestarService.dto.EventDTO;
 import eci.dosw.alpha.BienestarService.model.EmergencyContact;
 import eci.dosw.alpha.BienestarService.model.Resource;
@@ -57,7 +58,7 @@ public class BienestarController {
                description = "Registra un nuevo contacto de emergencia en la base de datos.")
     @ApiResponse(responseCode = "200", description = "Contacto creado")
     @PostMapping("/contact")
-    public EmergencyContact createContact(@RequestBody EmergencyContact contact) {
+    public EmergencyContact createContact(@RequestBody EmergencyContactDTO contact) {
         return bienestarService.createEmergencyContact(contact);
     }
 

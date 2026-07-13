@@ -1,5 +1,6 @@
 package eci.dosw.alpha.BienestarService;
 
+import eci.dosw.alpha.BienestarService.dto.EmergencyContactDTO;
 import eci.dosw.alpha.BienestarService.dto.EventDTO;
 import eci.dosw.alpha.BienestarService.model.EmergencyContact;
 import eci.dosw.alpha.BienestarService.model.Resource;
@@ -129,14 +130,17 @@ class BienestarServiceApplicationTests {
 
     @Test
     void createEmergencyContact_savesAndReturns() {
-        EmergencyContact contact = new EmergencyContact();
-        contact.setName("Emergencias");
-        when(emergencyContactRepository.save(contact)).thenReturn(contact);
+        EmergencyContactDTO dto = new EmergencyContactDTO();
+        dto.setName("Emergencias");
 
-        EmergencyContact result = service.createEmergencyContact(contact);
+        EmergencyContact saved = new EmergencyContact();
+        saved.setName("Emergencias");
+        when(emergencyContactRepository.save(any(EmergencyContact.class))).thenReturn(saved);
+
+        EmergencyContact result = service.createEmergencyContact(dto);
 
         assertThat(result.getName()).isEqualTo("Emergencias");
-        verify(emergencyContactRepository).save(contact);
+        verify(emergencyContactRepository).save(any(EmergencyContact.class));
     }
 
     // ── getAllEmergencyContacts ────────────────────────────────────────────────

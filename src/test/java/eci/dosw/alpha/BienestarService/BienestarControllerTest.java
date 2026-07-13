@@ -1,6 +1,7 @@
 package eci.dosw.alpha.BienestarService;
 
 import eci.dosw.alpha.BienestarService.controller.BienestarController;
+import eci.dosw.alpha.BienestarService.dto.EmergencyContactDTO;
 import eci.dosw.alpha.BienestarService.dto.EventDTO;
 import eci.dosw.alpha.BienestarService.model.EmergencyContact;
 import eci.dosw.alpha.BienestarService.model.Resource;
@@ -79,12 +80,14 @@ class BienestarControllerTest {
 
     @Test
     void createContact_delegatesToService() {
-        when(bienestarService.createEmergencyContact(contact)).thenReturn(contact);
+        EmergencyContactDTO contactDTO = new EmergencyContactDTO();
+        contactDTO.setName("Línea de crisis");
+        when(bienestarService.createEmergencyContact(contactDTO)).thenReturn(contact);
 
-        EmergencyContact result = controller.createContact(contact);
+        EmergencyContact result = controller.createContact(contactDTO);
 
         assertThat(result).isEqualTo(contact);
-        verify(bienestarService).createEmergencyContact(contact);
+        verify(bienestarService).createEmergencyContact(contactDTO);
     }
 
     @Test
